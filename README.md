@@ -1,6 +1,6 @@
 # Beach Wave - Turbulent Statistics Data
 
-Turbulent statistics extracted from CFD (Computational Fluid Dynamics) simulations of wave-driven hydrodynamics over different beach profile configurations. The data enables comparison of turbulence characteristics across beach nourishment strategies and erosion scenarios.
+Turbulent statistics extracted from OpenFOAM simulations of wave-driven hydrodynamics over different beach profile configurations via ParaView. The data enables comparison of turbulence characteristics across beach nourishment strategies and erosion scenarios.
 
 ## Repository Structure
 
@@ -63,6 +63,8 @@ tke = data[:, 1]
 eps_turb = data[:, 2]
 eps_total = data[:, 3]
 ```
+
+Alternatively, use `python plot_data.py`.
 
 ## License
 
