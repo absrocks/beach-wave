@@ -37,6 +37,7 @@ Each file is tab-separated with a header line:
 
 Each file contains ~113 data points spanning a cross-shore range of approximately 18.05 m to 28.0 m at 0.05 m resolution.
 
+### Turbulent Kinetic Energy
 $$\mathrm{TKE} = k_{\mathrm{resolved}} + k_{\mathrm{sgs}}$$
 
 $$k_{\mathrm{resolved}} = \tfrac{1}{2}\left(\langle u'^2 \rangle + \langle v'^2 \rangle + \langle w'^2 \rangle\right)$$
@@ -47,7 +48,15 @@ $$u' = u - \langle u \rangle$$
 
 and $\langle u \rangle$ is the velocity averaged along the spanwise direction.
 
+### Turbulent Dissipation Rate
 
+$$\varepsilon = \varepsilon_{\mathrm{resolved}} + \varepsilon_{\mathrm{sgs}} = 2\nu\, \langle S'_{ij} S'_{ij} \rangle + 2\langle \nu_{\mathrm{sgs}} S'_{ij} S'_{ij} \rangle$$
+
+where the fluctuating strain-rate tensor is
+
+$$S'_{ij} = \tfrac{1}{2}\left(\frac{\partial u'_i}{\partial x_j} + \frac{\partial u'_j}{\partial x_i}\right)$$
+
+with $\nu$ the kinematic viscosity and $\nu_{\mathrm{sgs}}$ the subgrid-scale eddy viscosity.
 
 
 ## Scenarios
