@@ -31,11 +31,24 @@ Each file is tab-separated with a header line:
 | Column             | Description                                    | Unit    |
 |--------------------|------------------------------------------------|---------|
 | `X (m)`            | Cross-shore position                           | m       |
-| `TKE_avg`          | Time-averaged Turbulent Kinetic Energy         | m²/s²   |
-| `epsilon_turb_avg` | Time-averaged turbulent dissipation rate        | m²/s³   |
-| `epsilon_avg`      | Time-averaged total dissipation rate            | m²/s³   |
+| `TKE_avg`          | Span-averaged and depth-averaged turbulent Kinetic Energy         | m²/s²   |
+| `epsilon_turb_avg` | Span-averaged and depth-averaged turbulent dissipation rate        | m²/s³   |
+| `epsilon_avg`      | Span-averaged and depth-averaged total dissipation rate            | m²/s³   |
 
 Each file contains ~113 data points spanning a cross-shore range of approximately 18.05 m to 28.0 m at 0.05 m resolution.
+
+$$\mathrm{TKE} = k_{\mathrm{resolved}} + k_{\mathrm{sgs}}$$
+
+$$k_{\mathrm{resolved}} = \tfrac{1}{2}\left(\langle u'^2 \rangle + \langle v'^2 \rangle + \langle w'^2 \rangle\right)$$
+
+where
+
+$$u' = u - \langle u \rangle$$
+
+and $\langle u \rangle$ is the velocity averaged along the spanwise direction.
+
+
+
 
 ## Scenarios
 
