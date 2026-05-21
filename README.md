@@ -50,7 +50,7 @@ and $\langle u \rangle$ is the velocity averaged along the spanwise direction.
 
 ### Turbulent Dissipation Rate
 
-$$\varepsilon = \varepsilon_{\mathrm{resolved}} + \varepsilon_{\mathrm{sgs}} = 2\nu\, \langle S'_{ij} S'_{ij} \rangle + 2\langle \nu_{\mathrm{sgs}} S'_{ij} S'_{ij} \rangle$$
+$$\varepsilon = \varepsilon_{\mathrm{resolved}} + \varepsilon_{\mathrm{sgs}} = 2\nu\ \langle S'_{ij} S'_{ij} \rangle + 2\langle \nu_{\mathrm{sgs}} S'_{ij} S'_{ij} \rangle$$
 
 where the fluctuating strain-rate tensor is
 
