@@ -190,28 +190,10 @@ def _overlay_profile(case_index, color):
     ticks = np.arange(lo_tick, top_tick + 1e-9, step)
     ax2.set_yticks(ticks)
 
-    # Restore the PRIMARY (parameter) axes as current. ax.twinx() switched the
-    # current axes to the secondary one, which would make the next case's
-    # plt.plot() draw its parameter line on the secondary axis with a restarted
-    # color cycle (duplicate colors + wrong scale). This puts it back.
+    
     plt.sca(fig._profile_primary)
 
 
-#  REFERENCE_CASES   — case names always added to every bar group (e.g. the
-#                      "erode" baseline you compare every treatment against).
-#  CASE_GROUPS       — list of treatment groups; each sublist is the set of
-#                      case names that should be bundled together along with
-#                      the reference cases.
-#
-#  Both are DERIVED from cfg['base_directory'] so renaming a case dir only
-#  requires editing base_directory. The case name is the path segment at
-#  cfg['case_name_index']; cases sharing a stem (name minus a trailing
-#  '_init'/'_final') form one group, ordered init -> final. Any case whose
-#  name contains 'erode' is treated as the reference and prepended to every
-#  group. Groups keep base_directory order, e.g.:
-#      Group 1:  eroded + bar_init  + bar_final
-#      Group 2:  eroded + berm_init + berm_final
-#      Group 3:  eroded + profile_init + profile_final
 def _derive_case_groups(dirs, seg_idx):
     if isinstance(dirs, str):
         dirs = [dirs]
@@ -247,12 +229,6 @@ def _grouped_bar_chart(results, ylabel, title, ylim=None, group_gap=1.0, value_f
     """
     Bar chart: one cluster per entry in CASE_GROUPS. Each cluster holds the
     REFERENCE_CASES bars (in order) followed by that group's treatment bars.
-
-    `results` is a list of (case_name, value) tuples produced by the main
-    loop; values for case names not in any group are silently ignored.
-
-    If CASE_GROUPS is empty or None, falls back to the old behavior of one
-    cluster per non-reference case (compared against all references).
     """
     by_case = dict(results)
     refs_present = [r for r in REFERENCE_CASES if r in by_case]
@@ -264,10 +240,7 @@ def _grouped_bar_chart(results, ylabel, title, ylim=None, group_gap=1.0, value_f
             if present:
                 groups.append(refs_present + present)
 
-    # Fall back to one-cluster-per-case when CASE_GROUPS is empty OR when none
-    # of the results matched any group (e.g. a one-off case like
-    # 'bar_nourishment_full' that isn't listed in CASE_GROUPS). Without this
-    # the bar chart would silently draw nothing.
+    
     if not groups:
         ordered = [c for c, _ in results if c in by_case]
         if not ordered:
@@ -374,9 +347,7 @@ def _interp_nan(vals, x):
 
 
 def _autocorr(sig):
-    """Normalized spanwise autocorrelation R(r), positive lags only. The mean
-    removed here IS the spanwise average, so this is the autocorrelation of the
-    fluctuation u' = u - <u>_y. (TODO.md step 2.) R(0)=1."""
+    
     s = np.asarray(sig, dtype=float)
     s = s - np.mean(s)
     R = np.correlate(s, s, mode='full')
@@ -405,8 +376,7 @@ def _first_zero_l0(R, dy):
 
 
 def _fit_powerlaw(kappa, E, k_lo, k_hi):
-    """Best-fit power-law slope of E(kappa) over [k_lo, k_hi] in log-log, with
-    R^2. (TODO.md step 1.) Returns (slope_m, R2, intercept_b, n_pts)."""
+    
     kappa = np.asarray(kappa, dtype=float)
     E = np.asarray(E, dtype=float)
     mask = (kappa > k_lo) & (kappa < k_hi) & (E > 0) & np.isfinite(E)
@@ -422,16 +392,7 @@ def _fit_powerlaw(kappa, E, k_lo, k_hi):
 
 
 def spanwise_spectra_plot():
-    """Read the spanwise velocity profiles written by
-    extract_spanwise_profiles(), compute 1D wavenumber spectra E_uu/E_vv/E_ww
-    (FFT along the span), average over the snapshots per probe, and plot each
-    probe loglog with -5/3 and -3 reference slopes and the grid cutoff kappa.
-    (TODO.md steps 5-7.) Standalone: caller exits after this.
-
-    cfg['spanwise_spectra']['case'] is the 'spanwise' output dir containing one
-    folder per probe (e.g. P3_x39_z0.54/) with <label>_t<t>.dat velocity files
-    (the *_alphaZ_*/*_alphaX_* files are alpha checks and are ignored here).
-    """
+   
     sp = cfg.get('spanwise_spectra') or {}
     case = sp.get('case')
     if not case or not os.path.isdir(case):
@@ -612,10 +573,7 @@ def main():
     def _case_of(base_dir):
         return Path(base_dir).parts[seg_idx]
 
-    # Decide whether to use the grouped layout. If CASE_GROUPS is set but NONE
-    # of the supplied dirs has a case_name in any group (e.g. a one-off case
-    # like 'bar_nourishment_full'), fall back to the single-plot path so the
-    # data still gets plotted instead of being silently skipped.
+    
     _known_group_names = set(REFERENCE_CASES) | {c for g in CASE_GROUPS for c in g}
     _matched_any = any(_case_of(d) in _known_group_names for d in dirs)
     use_groups = bool(CASE_GROUPS) and _matched_any
@@ -716,11 +674,7 @@ def time_avg(pairs, var_name, window=None, output_params=None):
     else:
         tmin, tmax = pairs[0][0], pairs[-1][0]
 
-    # The depth-average writes a slightly DIFFERENT X grid each timestep (its
-    # grid follows the per-timestep water bounds), so keying by exact float X
-    # gives ~one sample per X and no real time-average. Bin X onto a common
-    # grid of width cfg['x_bin'] so all timesteps' values at nearby X are
-    # grouped and averaged together.
+    
     x_bin = float(cfg.get('x_bin', 0.05) or 0.05)
 
     def _xkey(x_pos):
@@ -766,12 +720,7 @@ def time_avg(pairs, var_name, window=None, output_params=None):
     return eps_avg, x_array
     
 def streamwise_average(eps_avg, x_array, x_range):
-    """Average parameter values over the given streamwise X range.
-
-    If cfg['exclude_zero'] is True, drops (x, value) pairs where value==0
-    (or NaN) before computing the mean, so the denominator shrinks
-    accordingly.
-    """
+    
     mask = (x_array >= x_range[0]) & (x_array <= x_range[1])
     vals = np.asarray(eps_avg, dtype=float)[mask]
     vals = vals[~_bad_mask(vals)]
@@ -780,12 +729,7 @@ def streamwise_average(eps_avg, x_array, x_range):
     return float(np.mean(vals))
 
 def streamwise_integrate(eps_avg, x_array, x_range=None):
-    """Trapezoidal integral over X. If x_range is None, use the case's full available X extent.
-
-    If cfg['exclude_zero'] is True, (x, value) pairs with value==0 (or NaN)
-    are dropped before integration. The remaining points are still
-    integrated in X-order with their actual (possibly non-uniform) spacing.
-    """
+    
     x_array = np.asarray(x_array, dtype=float)
     eps_avg = np.asarray(eps_avg, dtype=float)
     if x_range is not None:
@@ -801,16 +745,7 @@ def streamwise_integrate(eps_avg, x_array, x_range=None):
     return float(np.trapz(eps_avg[order], x_array[order]))
 
 def streamwise_cumulative_average(eps_avg, x_array, x_range=None):
-    """Running (cumulative) average vs X.
-
-    At each kept X[i], returns the mean of eps_avg[0..i] after filtering out
-    NaN and (if cfg['exclude_zero']) zero values. The result therefore has
-    the same length as the *kept* X array, which may be shorter than the
-    input if zeros/NaNs were present.
-
-    Returns (x_kept, cum_avg). If everything is filtered out, returns two
-    empty arrays.
-    """
+    
     x_array = np.asarray(x_array, dtype=float)
     eps_avg = np.asarray(eps_avg, dtype=float)
     if x_range is not None:

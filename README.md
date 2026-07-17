@@ -5,26 +5,27 @@ Turbulent statistics extracted from OpenFOAM simulations of wave-driven hydrodyn
 ## Repository Structure
 
 ```
-turbulent_staticstics_data/
-├── initial_profile/        # Reference (equilibrium) beach profile
-├── eroded_profile/         # Beach profile after erosion
-├── bar_nourishment/        # Bar-type beach nourishment
-├── berm_nourishment/       # Berm-type beach nourishment
-└── profile_nourishment/    # Full profile nourishment
+full_scale/turbulent_staticstics_data/
+├── eroded_profile/                   # Beach profile after erosion
+├── bar_nourishment_full_initial/     # Bar-type beach nourishment intital Profile
+├── bar_nourishment_full_final/       # Bar-type beach nourishment final Profile
+├── berm_nourishment_full_initial/    # Berm-type beach nourishment intital Profile
+├── berm_nourishment_full_final/      # Berm-type beach nourishment final Profile
+└── profile_nourishment_initial/      # Profile nourishment intital Profile
+└── profile_nourishment_final/        # Profile nourishment final Profile
 ```
 
-Each directory contains **96 data files** covering cross-shore positions from **x = 18.5 m** to **x = 28.0 m** at 0.1 m intervals.
+Each directory contains **96 data files** covering cross-shore positions from **x = 33 m** to **x = 48.0 m** at 0.03 m intervals.
 
 ## Data Format
 
-Files are named `TKE_epsilon_turb_epsilon_<X>.dat` where `<X>` is the cross-shore coordinate of the vertical profile.
+Files are named `TKE_epsilon_turb_pw_avg_Y_epsilon_pw_avg_Y<X>.dat` where `<X>` is the cross-shore coordinate of the vertical profile.
 
 Each file is tab-separated with a header line:
 
 ```
-# X (m)  TKE_avg  epsilon_turb_avg  epsilon_avg
- 18.05   9.42910932e-05  8.08574217e-06  1.72762275e-06
- 18.10   3.51141883e-05  1.17610031e-06  2.51906888e-06
+# X (m) TKE_avg epsilon_turb_pw_avg_Y_avg epsilon_pw_avg_Y_avg
+ 33.0303  8.58764246e-05  0.547719438  0.0725584536
  ...
 ```
 
@@ -32,10 +33,10 @@ Each file is tab-separated with a header line:
 |--------------------|------------------------------------------------|---------|
 | `X (m)`            | Cross-shore position                           | m       |
 | `TKE_avg`          | Span-averaged and depth-averaged turbulent Kinetic Energy         | m²/s²   |
-| `epsilon_turb_avg` | Span-averaged and depth-averaged turbulent dissipation rate        | m²/s³   |
-| `epsilon_avg`      | Span-averaged and depth-averaged total dissipation rate            | m²/s³   |
+| `epsilon_turb_pw_avg_Y_avg` | Span-averaged and depth-averaged turbulent dissipation rate        | m²/s³   |
+| `epsilon_pw_avg_Y_avg`      | Span-averaged and depth-averaged total dissipation rate            | m²/s³   |
 
-Each file contains ~113 data points spanning a cross-shore range of approximately 18.05 m to 28.0 m at 0.05 m resolution.
+Each file contains ~113 data points spanning a cross-shore range of approximately 33 m to 48 m at 0.03 m resolution.
 
 ### Turbulent Kinetic Energy
 $$\mathrm{TKE} = k_{\mathrm{resolved}} + k_{\mathrm{sgs}}$$
@@ -63,7 +64,6 @@ with $\nu$ the kinematic viscosity and $\nu_{\mathrm{sgs}}$ the subgrid-scale ed
 
 | Scenario                | Description                                                                 |
 |-------------------------|-----------------------------------------------------------------------------|
-| **Initial profile**     | Baseline equilibrium beach profile before any intervention or erosion       |
 | **Eroded profile**      | Beach profile degraded by wave-driven erosion processes                     |
 | **Bar nourishment**     | Sediment placed as a submerged bar offshore to dissipate wave energy        |
 | **Berm nourishment**    | Sediment placed on the upper beach face (berm) for direct shore protection  |
