@@ -71,13 +71,21 @@ with $\nu$ the kinematic viscosity and $\nu_{\mathrm{sgs}}$ the subgrid-scale ed
 
 ## Usage
 
+### Requirements
+
+The plotting script `plot_data.py` requires Python 3 with `numpy`, `matplotlib`, and `scipy`. Install them with:
+
+```bash
+pip install -r requirements.txt
+```
+
 The data can be loaded with any tool that reads whitespace-delimited text. For example, in Python:
 
 ```python
 import numpy as np
 
 data = np.loadtxt(
-    "turbulent_staticstics_data/initial_profile/TKE_epsilon_turb_epsilon_20.0.dat",
+    "full_scale/turbulent_staticstics_data/bar_nourishment_full_final/logs/TKE_epsilon_turb_pw_avg_Y_epsilon_pw_avg_Y_depthavg/TKE_epsilon_turb_pw_avg_Y_epsilon_pw_avg_Y_depthavg_28.4.dat",
     skiprows=1,
 )
 x = data[:, 0]
